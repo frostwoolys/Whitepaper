@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FROLY — Auto Download</title>
+  <meta name="description" content="Halaman pemicu auto-download FROLY Whitepaper" />
+  <style>
+    :root { --bg:#0b0b10; --text:#f6f7fb; --muted:#a4a7b0; }
+    *{box-sizing:border-box} html,body{height:100%;margin:0}
+    body{display:grid;place-items:center;background:var(--bg);color:var(--text);font:16px/1.6 system-ui;padding:24px}
+    .box{width:min(560px,92vw);text-align:center;background:#141422;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:24px}
+    a.btn{display:inline-block;margin-top:10px;padding:12px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.15);text-decoration:none;color:var(--text)}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Menyiapkan Unduhan…</h1>
+    <p>Jika unduhan belum muncul, klik tombol di bawah ini.</p>
+    <a id="fallback" class="btn" href="Whitepaper.pdf" download="FROLY_Whitepaper.pdf">🧩 Fallback Download</a>
+  </div>
+
+  <script>
+    const filePath = "Whitepaper.pdf";
+    const fileName = "FROLY_Whitepaper.pdf";
+    async function forceDownload(url, filename){
+      try{
+        const res = await fetch(url, {credentials:"same-origin", cache:"no-store"});
+        if(!res.ok) throw new Error("Gagal mengunduh: "+res.status);
+        const blob = await res.blob();
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(a.href);
+      }catch(e){
+        // user can click fallback link
+      }
+    }
+    // Auto-trigger on page load (use this page as Linktree destination)
+    forceDownload(filePath, fileName);
+  </script>
+</body>
+</html>

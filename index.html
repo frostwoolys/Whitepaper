@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FROLY — Links</title>
+  <meta name="description" content="Link-in-bio FROLY dengan tombol auto-download Whitepaper" />
+  <style>
+    :root { --bg:#0b0b10; --text:#f6f7fb; --muted:#a4a7b0; --card:#141422; --accent:#3fb7ff; --accent2:#ff69b4; }
+    *{box-sizing:border-box} html,body{height:100%;margin:0}
+    body{
+      display:grid; place-items:center; background:radial-gradient(1200px 600px at 70% -10%, #1b1b2a 0%, #0b0b10 60%), var(--bg);
+      color:var(--text); font:16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      padding:24px;
+    }
+    .wrap{ width:min(640px, 96vw); text-align:center; }
+    .avatar{
+      width:96px; height:96px; border-radius:50%; background:#222237; border:1px solid rgba(255,255,255,.08);
+      margin:0 auto 12px; display:grid; place-items:center; font-size:40px;
+    }
+    h1{margin:8px 0 4px; font-size:1.6rem}
+    p{margin:0 0 22px; color:var(--muted)}
+    .links{ display:flex; flex-direction:column; gap:12px }
+    a.btn, button.btn{
+      appearance:none; border:1px solid rgba(255,255,255,.12); background:#151530; color:var(--text);
+      text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:700; letter-spacing:.2px;
+      display:flex; justify-content:center; align-items:center; gap:10px; cursor:pointer; transition:transform .06s ease, box-shadow .2s ease;
+    }
+    .btn.primary{ background:linear-gradient(180deg, var(--accent) 0%, #2fa8ff 100%); color:#082133; border-color:transparent; box-shadow:0 10px 24px rgba(63,183,255,.35) }
+    .btn.pink{ background:linear-gradient(180deg, var(--accent2) 0%, #ff4aa2 100%); border-color:transparent }
+    .btn:active{ transform:translateY(1px) }
+    small{ display:block; margin-top:16px; color:var(--muted) }
+    code{ background:#101020; border:1px solid rgba(255,255,255,.06); padding:.15rem .4rem; border-radius:6px }
+    .note{ margin-top:10px; color:var(--muted); font-size:.9rem }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="avatar">🧊</div>
+    <h1>FROLY</h1>
+    <p>Link-in-bio sederhana dengan tombol <strong>Auto-Download Whitepaper</strong>.</p>
+
+    <div class="links">
+      <!-- Auto-download via in-page JS (root path) -->
+      <button id="dl" class="btn primary">⬇️ Download Whitepaper (Auto)</button>
+
+      <!-- Direct fallback (attribute download) -->
+      <a class="btn" href="Whitepaper.pdf" download="FROLY_Whitepaper.pdf">🧩 Fallback Download</a>
+
+      <!-- Example external links (customize freely) -->
+      <a class="btn pink" href="https://x.com/FrostWooly" target="_blank" rel="noopener">𝕏 (Twitter)</a>
+      <a class="btn" href="https://t.me/..." target="_blank" rel="noopener">Telegram</a>
+
+      <!-- Autodownload page for use from Linktree official button -->
+      <a class="btn" href="download.html">🔗 Halaman Auto-Download (untuk Linktree)</a>
+    </div>
+
+    <small>File PDF berada di <code>/Whitepaper.pdf</code> (root repo).</small>
+    <div class="note">Jika memakai <em>Linktree (linktr.ee)</em>, arahkan tombolnya ke <code>/download.html</code> di domain GitHub Pages Anda untuk memicu auto-download.</div>
+  </main>
+
+  <script>
+    const filePath = "Whitepaper.pdf";
+    const fileName = "FROLY_Whitepaper.pdf";
+    async function forceDownload(url, filename){
+      const res = await fetch(url, {credentials:"same-origin", cache:"no-store"});
+      if(!res.ok) throw new Error("Gagal mengunduh: "+res.status);
+      const blob = await res.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    }
+    document.getElementById("dl").addEventListener("click", async () => {
+      try { await forceDownload(filePath, fileName); }
+      catch(e){ alert("Download gagal. Coba Fallback Link.\n\nDetail: "+e.message); }
+    });
+  </script>
+</body>
+</html>
